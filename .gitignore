@@ -1,0 +1,13 @@
+.idea
+.venv
+build
+dist
+*.spec
+**/__pycache__
+*.pyc
+.vscode
+
+*.zip
+*.tar.gz
+*.7z
+*.tar
