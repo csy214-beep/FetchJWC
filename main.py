@@ -61,18 +61,24 @@ class TrayIcon(QSystemTrayIcon):
 
         manual_action = QAction("获取通知", self)
         manual_action.triggered.connect(self._manual_check)
-        menu.addAction(manual_action)
 
         open_action = QAction("打开网页", self)
         open_action.triggered.connect(self._open_web)
-        menu.addAction(open_action)
+
+        open_dir = QAction("程序文件夹", self)
+        open_dir.triggered.connect(lambda: os.startfile(BASE_DIR))
+
+        open_cache = QAction("日志文件夹", self)
+        open_cache.triggered.connect(lambda: os.startfile(CACHE_DIR))
 
         # 开机自启切换
         self.auto_start_action = QAction("开机自启", self)
         self.auto_start_action.setCheckable(True)
         self.auto_start_action.setChecked(self._is_auto_start_enabled())
         self.auto_start_action.triggered.connect(self._toggle_auto_start)
-        menu.addAction(self.auto_start_action)
+        menu.addAction(manual_action)
+        menu.addSeparator()
+        menu.addActions([open_action, open_dir, open_cache, self.auto_start_action])
 
         menu.addSeparator()
         exit_action = QAction("退出", self)
