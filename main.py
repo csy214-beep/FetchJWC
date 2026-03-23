@@ -62,7 +62,10 @@ class TrayIcon(QSystemTrayIcon):
         manual_action = QAction("获取通知", self)
         manual_action.triggered.connect(self._manual_check)
 
-        open_action = QAction("打开网页", self)
+        open_latest_news = QAction("打开最新通知", self)
+        open_latest_news.triggered.connect(self._open_latest_news)
+
+        open_action = QAction("打开教务处网站", self)
         open_action.triggered.connect(self._open_web)
 
         open_dir = QAction("程序文件夹", self)
@@ -78,7 +81,7 @@ class TrayIcon(QSystemTrayIcon):
         self.auto_start_action.triggered.connect(self._toggle_auto_start)
         menu.addAction(manual_action)
         menu.addSeparator()
-        menu.addActions([open_action, open_dir, open_cache, self.auto_start_action])
+        menu.addActions([open_action, open_latest_news, open_dir, open_cache, self.auto_start_action])
 
         menu.addSeparator()
         exit_action = QAction("退出", self)
@@ -153,7 +156,7 @@ class TrayIcon(QSystemTrayIcon):
                 self._show_message("有新通知", format_notices(new))
                 logging.info(f"手动检查发现 {len(new)} 条新通知")
             else:
-                self._show_message("暂无新通知", "当前列表与上次一致")
+                self._show_message("暂无新通知", f"最近一条：{old[0].get('title')}")
                 logging.info("手动检查无新通知")
 
             # 更新保存
@@ -163,6 +166,13 @@ class TrayIcon(QSystemTrayIcon):
         except Exception as e:
             self._show_message("异常", f"手动获取时出错: {e}")
             logging.exception(f"手动检查异常: {e}")
+
+    def _open_latest_news(self):
+        old = self._load_notices()
+        if old:
+            webbrowser.open(old[0].get("link"))
+        else:
+            self._show_message("错误", "历史记录为空！")
 
     def _open_web(self):
         webbrowser.open(MORE_LINK)
