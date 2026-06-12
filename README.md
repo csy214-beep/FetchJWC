@@ -43,4 +43,4 @@ pyinstaller --onefile --windowed --icon=assets/101309096_p0.ico --add-data "asse
 
 ## 许可证
 
-MIT © csy214-beep
+MIT © igugyj
